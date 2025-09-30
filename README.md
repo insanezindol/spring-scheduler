@@ -140,7 +140,3 @@ ShedLock은 MySQL 데이터베이스에 락 정보를 저장하기 위한 테이
 -   [Spring Scheduling Documentation](https://spring.io/guides/gs/scheduling-tasks/)
 -   [ShedLock Documentation](https://github.com/lukas-krecan/ShedLock)
 -   [Spring Boot Reference Guide](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/)
-
-## 라이선스
-
-이 프로젝트는 예제 목적으로 작성되었습니다.
