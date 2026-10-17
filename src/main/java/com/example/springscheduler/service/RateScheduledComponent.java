@@ -1,15 +1,15 @@
 package com.example.springscheduler.service;
 
 import lombok.extern.slf4j.Slf4j;
-import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 @Service
 @Slf4j
-@EnableSchedulerLock(defaultLockAtLeastFor = "PT5S", defaultLockAtMostFor = "PT10S")
 public class RateScheduledComponent {
 
     // 해당 작업의 시작 시점부터 시간을 카운트
@@ -21,14 +21,13 @@ public class RateScheduledComponent {
         log.info("[END] fixedRateJobSync.");
     }
 
-    private static int i = 0;
+    private final AtomicInteger counter = new AtomicInteger();
 
     @Scheduled(initialDelay = 10000, fixedRate = 5000)
     @SchedulerLock(name = "fixedRateJobAsync", lockAtMostFor = "PT1S", lockAtLeastFor = "PT1S")
     @Async
     public void fixedRateJobAsync() throws InterruptedException {
-        int j = i;
-        i++;
+        int j = counter.getAndIncrement();
         log.info("[BEG] fixedRateJobAsync. - {}", j);
         Thread.sleep(2000);
         log.info("[END] fixedRateJobAsync. - {}", j);

@@ -1,22 +1,20 @@
 package com.example.springscheduler.config;
 
+import org.springframework.boot.task.ThreadPoolTaskSchedulerCustomizer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.SchedulingConfigurer;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
 @Configuration
-public class SchedulerConfig implements SchedulingConfigurer {
-    private final static int POOL_SIZE = 10;
+public class SchedulerConfig {
+    private static final int POOL_SIZE = 10;
 
-    @Override
-    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-        final ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
-
-        threadPoolTaskScheduler.setPoolSize(POOL_SIZE);
-        threadPoolTaskScheduler.setThreadNamePrefix("jinhyunglee-");
-        threadPoolTaskScheduler.initialize();
-
-        taskRegistrar.setTaskScheduler(threadPoolTaskScheduler);
+    // 스케줄러 생성/종료는 스프링 부트에 맡기고 설정값만 커스터마이징
+    // (ThreadPoolTaskScheduler 를 직접 빈으로 등록하면 @Async 기본 실행기(applicationTaskExecutor)가 비활성화됨)
+    @Bean
+    public ThreadPoolTaskSchedulerCustomizer threadPoolTaskSchedulerCustomizer() {
+        return threadPoolTaskScheduler -> {
+            threadPoolTaskScheduler.setPoolSize(POOL_SIZE);
+            threadPoolTaskScheduler.setThreadNamePrefix("jinhyunglee-");
+        };
     }
 }
